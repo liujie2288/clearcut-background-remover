@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import '../src/styles.css';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://clearcut-bbn.pages.dev';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://clearcutai.shop';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
