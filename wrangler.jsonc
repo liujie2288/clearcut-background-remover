@@ -1,6 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "clearcut",
-  "compatibility_date": "2026-09-05",
-  "pages_build_output_dir": "./out"
+  "compatibility_date": "2026-09-06",
+  "pages_build_output_dir": "./out",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "clearcut-auth",
+      "database_id": "f0f4924d-597b-4034-86be-16fcef42b3a9"
+    }
+  ]
 }

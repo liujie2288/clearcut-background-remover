@@ -38,6 +38,20 @@ const FAQS = [
 
 type SelectedImage = { file: File; originalUrl: string; name: string; width: number; height: number };
 
+type SignedInUser = { email: string; name?: string | null; picture_url?: string | null };
+
+function AccountButton() {
+  const [user, setUser] = useState<SignedInUser | null | undefined>(undefined);
+
+  useEffect(() => {
+    void fetch('/api/auth/session').then((response) => response.ok ? response.json() : { user: null }).then((data: { user: SignedInUser | null }) => setUser(data.user)).catch(() => setUser(null));
+  }, []);
+
+  if (user === undefined) return null;
+  if (!user) return <a className="header-cta" href="/api/auth/google">Sign in</a>;
+  return <button className="header-cta" onClick={() => void fetch('/api/auth/logout', { method: 'POST' }).then(() => setUser(null))}>Sign out</button>;
+}
+
 function Tool() {
   const inputRef = useRef<HTMLInputElement>(null);
   const engineRef = useRef<BackgroundRemovalEngine | null>(null);
@@ -243,7 +257,7 @@ export default function App({ page = 'home' }: { page?: 'home' | 'privacy' | 'te
   const legal = page !== 'home';
   return (
     <div className="app-shell">
-      {!legal && <header><a href="/" className="brand"><span><WandSparkles /></span>clearcut</a><nav><a href="#how-it-works">How it works</a><a href="#faq">FAQ</a><a href="/privacy">Privacy</a></nav><a className="header-cta" href="#tool">Remove a background</a></header>}
+      {!legal && <header><a href="/" className="brand"><span><WandSparkles /></span>clearcut</a><nav><a href="#how-it-works">How it works</a><a href="#faq">FAQ</a><a href="/privacy">Privacy</a></nav><AccountButton /></header>}
       {page === 'privacy' ? <Legal type="privacy" /> : page === 'terms' ? <Legal type="terms" /> : <Home />}
       {!legal && <footer><a href="/" className="brand"><span><WandSparkles /></span>clearcut</a><p>Private AI image tools, right in your browser.</p><div><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href={`mailto:${CONTACT_EMAIL}`}>Contact</a></div><small>© 2026 Clearcut</small></footer>}
     </div>
