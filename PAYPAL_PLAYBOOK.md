@@ -49,6 +49,8 @@ The Sandbox app sends events to:
 https://lab.clearcutai.shop/api/paypal/webhook
 ```
 
+The listener is registered on the PayPal Sandbox app. Store the returned webhook ID as the encrypted Cloudflare variable `PAYPAL_WEBHOOK_ID`; do not hardcode it in the Function.
+
 Subscribed events:
 
 - `CHECKOUT.ORDER.APPROVED`: captures an approved order even if the buyer never returns to the site.
