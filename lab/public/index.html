@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Clearcut Lab · Auth & Payments</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <a class="brand" href="/">clearcut <span>lab</span></a>
+        <a class="back" href="https://clearcutai.shop">Back to main site</a>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow">ISOLATED SANDBOX</p>
+        <h1>Learn authentication<br />and payments safely.</h1>
+        <p>This environment uses separate Cloudflare resources and PayPal Sandbox. No real money is charged.</p>
+      </section>
+
+      <div id="notice" class="notice" hidden></div>
+
+      <section class="grid">
+        <article class="card">
+          <div class="step">01</div>
+          <h2>Google sign-in</h2>
+          <p>Sign in before creating a payment. The server stores only your basic profile and a random session.</p>
+          <div id="account">
+            <a class="button dark" href="/api/auth/google">Continue with Google</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="step">02</div>
+          <h2>PayPal test checkout</h2>
+          <div class="price"><strong>$1.00</strong><span>USD · one-time sandbox payment</span></div>
+          <p>The amount is fixed on the server. PayPal credentials and payment capture never run in the browser.</p>
+          <button id="checkout" class="button paypal" disabled>Sign in to continue</button>
+          <p class="fine">Use a PayPal Sandbox personal buyer account. Never enter a real PayPal password here.</p>
+        </article>
+      </section>
+
+      <section class="flow">
+        <h2>What this lab demonstrates</h2>
+        <ol>
+          <li><span>Browser</span> starts Google OAuth and receives an HttpOnly session cookie.</li>
+          <li><span>Cloudflare Function</span> creates a fixed $1 Sandbox order using the secret.</li>
+          <li><span>PayPal</span> asks the sandbox buyer to approve the order.</li>
+          <li><span>Cloudflare Function</span> captures and validates the order, then records it in D1.</li>
+        </ol>
+      </section>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
