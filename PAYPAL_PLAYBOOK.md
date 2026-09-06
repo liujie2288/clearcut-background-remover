@@ -9,6 +9,7 @@ Browser -> Google OAuth -> lab session in D1
 Browser -> create-order Function -> PayPal Sandbox Orders API
 Browser -> PayPal buyer approval -> return Function
 return Function -> capture + verify -> paypal_orders in D1
+PayPal -> signed webhook -> verify + deduplicate -> synchronize D1
 ```
 
 The browser never receives the PayPal Client Secret. The test price is fixed server-side at USD 1.00, so changing browser code cannot change the captured amount.
@@ -20,7 +21,7 @@ The browser never receives the PayPal Client Secret. The test price is fixed ser
 - Custom domain: `lab.clearcutai.shop`
 - D1 database and binding: `clearcut-lab` / `DB`
 - Session cookie: `cc_lab_session`
-- Runtime secrets: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`
+- Runtime secrets: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`
 
 ## OAuth setup
 
@@ -40,7 +41,28 @@ Use Sandbox app credentials and a Sandbox personal buyer account. The server cal
 - `POST /v2/checkout/orders` to create the fixed-price order.
 - `POST /v2/checkout/orders/{id}/capture` after buyer approval.
 
-Before going live, create a separate Live app, rotate any credential shared outside the secret manager, add verified webhooks, define fulfillment and refund behavior, and test approve/cancel/error cases.
+## Webhooks
+
+The Sandbox app sends events to:
+
+```text
+https://lab.clearcutai.shop/api/paypal/webhook
+```
+
+Subscribed events:
+
+- `CHECKOUT.ORDER.APPROVED`: captures an approved order even if the buyer never returns to the site.
+- `PAYMENT.CAPTURE.COMPLETED`: verifies amount/currency and confirms the local order.
+- `PAYMENT.CAPTURE.PENDING`: records a payment that is not final yet.
+- `PAYMENT.CAPTURE.DECLINED` and `PAYMENT.CAPTURE.DENIED`: records a failed capture.
+- `PAYMENT.CAPTURE.REFUNDED`: records a refund.
+- `PAYMENT.CAPTURE.REVERSED`: records a reversal.
+
+Every webhook is verified by PayPal's `verify-webhook-signature` endpoint before it can change an order. Event IDs are stored in `paypal_webhook_events`; a successfully processed ID is acknowledged without running the business logic again. Failed processing returns HTTP 500 so PayPal can retry.
+
+The browser return and `CHECKOUT.ORDER.APPROVED` webhook use the same `PayPal-Request-Id` for capture. This makes capture idempotent when both paths run.
+
+Before going live, create a separate Live app, rotate any credential shared outside the secret manager, create a separate Live webhook, define fulfillment and refund behavior, and test approve/cancel/error cases.
 
 ## Local checks
 

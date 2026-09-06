@@ -12,3 +12,11 @@ test('browser code never contains a PayPal secret', async () => {
   const script = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.doesNotMatch(script, /PAYPAL_CLIENT_SECRET|client_secret/i);
 });
+
+test('webhook implementation verifies signatures and deduplicates events', async () => {
+  const source = await readFile(new URL('../functions/api/paypal/[[path]].ts', import.meta.url), 'utf8');
+  assert.match(source, /verify-webhook-signature/);
+  assert.match(source, /paypal_webhook_events/);
+  assert.match(source, /processing_status === 'PROCESSED'/);
+  assert.match(source, /CHECKOUT\.ORDER\.APPROVED/);
+});
