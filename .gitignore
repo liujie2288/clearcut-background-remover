@@ -7,3 +7,4 @@ out/
 vite.config.js
 vite.config.d.ts
 .DS_Store
+public/sample-person-v2.png

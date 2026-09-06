@@ -113,7 +113,7 @@ function Tool() {
   async function trySample() {
     track('sample_image_used');
     try {
-      const response = await fetch('/sample-person.png', { cache: 'force-cache' });
+      const response = await fetch('/sample-person-v2.png', { cache: 'force-cache' });
       if (!response.ok || !response.headers.get('content-type')?.startsWith('image/')) {
         throw new Error('Sample image is unavailable.');
       }
