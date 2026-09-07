@@ -1,5 +1,5 @@
 const EVENTS = new Set([
-  'page_view', 'upload_started', 'upload_success', 'upload_rejected',
+  'upload_started', 'upload_success', 'upload_rejected',
   'model_load_started', 'model_ready', 'removal_started', 'removal_success',
   'removal_failed', 'download_clicked', 'remove_another_clicked',
   'sample_image_used', 'feedback_submitted',

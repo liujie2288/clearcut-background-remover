@@ -37,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           function gtag(){dataLayer.push(arguments);}
           window.gtag = gtag;
           gtag('js', new Date());
-          gtag('config', '${googleAnalyticsId}', { send_page_view: false });
+          gtag('config', '${googleAnalyticsId}');
         `}
       </Script>
     </html>

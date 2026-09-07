@@ -246,7 +246,6 @@ function Legal({ type }: { type: 'privacy' | 'terms' }) {
 }
 
 export default function App({ page = 'home' }: { page?: 'home' | 'privacy' | 'terms' }) {
-  useEffect(() => { track('page_view'); }, []);
   const legal = page !== 'home';
   return (
     <div className="app-shell">
