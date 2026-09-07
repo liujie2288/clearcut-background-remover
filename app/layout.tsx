@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import '../src/styles.css';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://clearcutai.shop';
+const googleAnalyticsId = 'G-VXJ4356NZB';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -22,5 +24,22 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#f6f5f0' };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return (
+    <html lang="en">
+      <body>{children}</body>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', '${googleAnalyticsId}', { send_page_view: false });
+        `}
+      </Script>
+    </html>
+  );
 }

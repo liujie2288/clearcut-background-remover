@@ -8,7 +8,10 @@ const EVENTS = new Set([
 type SafeValue = string | number | boolean;
 
 declare global {
-  interface Window { gtag?: (command: 'event', event: string, metadata?: Record<string, SafeValue>) => void }
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: (command: 'event', event: string, metadata?: Record<string, SafeValue>) => void;
+  }
 }
 
 export function track(event: string, metadata: Record<string, SafeValue> = {}): void {
